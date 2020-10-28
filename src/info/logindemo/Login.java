@@ -20,15 +20,15 @@ import javax.sql.DataSource;
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	// ƒf[ƒ^ƒ\[ƒX‚Ìì¬
+	// ãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã®ä½œæˆ
 	DataSource ds;
 
-	// ‰Šú‰»ˆ—
+	// åˆæœŸåŒ–å‡¦ç†
 	public void init() throws ServletException {
 		try {
-			// ‰ŠúƒRƒ“ƒeƒLƒXƒg‚ğæ“¾
+			// åˆæœŸã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’å–å¾—
 			InitialContext ic = new InitialContext();
-			// ƒ‹ƒbƒNƒAƒbƒv‚µ‚Äƒf[ƒ^ƒ\[ƒX‚ğæ“¾
+			// ãƒ«ãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã¦ãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚’å–å¾—
 			ds = (DataSource) ic.lookup("java:comp/env/jdbc/searchman");
 		} catch (Exception e) {
 
@@ -84,7 +84,7 @@ public class Login extends HttpServlet {
 			// DriverManager.getConnection("jdbc:mysql://localhost:3306/budgetbook?serverTimezone=UTC&useSSL=false",
 			// "suser", "spass");
 
-			// ƒf[ƒ^ƒ\[ƒX‚©‚çConnection‚ğæ“¾
+			// ãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‹ã‚‰Connectionã‚’å–å¾—
 			conn = ds.getConnection();
 
 			// preparing for creating sql
@@ -109,23 +109,17 @@ public class Login extends HttpServlet {
 //			pstmt = conn.prepareStatement(sql);
 //			rset = pstmt.executeQuery();
 
-			// test
-			while (rset.next()) {
-				System.out.println(rset.getString("id") + ", " + rset.getString("password"));
-			}
+
 
 			// transfer the data to the transition page(put it by Attribute)
 			request.setAttribute("SqlResult", rset);
 
 			// move on to loginResult.jsp or loginResultFailed.jsp
-			if (inputId.equals(rset.getString("id")) && inputPassword.equals(rset.getString("password"))) {
-				//request.getRequestDispatcher("/loginResult.jsp").forward(request, response);
-				//response.sendRedirect
-				request.getRequestDispatcher("loginResult.jsp").forward(request, response);
-			} else {
-				//request.getRequestDispatcher("/loginResultFailed.jsp").forward(request, response);
-				request.getRequestDispatcher("loginResultFailed.jsp").forward(request, response);
-			}
+			if (rset.next()) {
+	            request.getRequestDispatcher("loginResult.jsp").forward(request, response);
+	        } else {
+	            request.getRequestDispatcher("loginResultFailed.jsp").forward(request, response);
+	        }
 
 			// terminate the used objects
 			rset.close();
